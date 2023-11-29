@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommender</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            padding: 20px;
+            background-color: #007bff;
+            color: #fff;
+            margin: 0;
+            width: 100%;
+        }
+
+        form {
+            text-align: center;
+            margin: 20px;
+        }
+        label, input, button {
+            margin: 10px;
+            padding: 8px;
+            font-size: 16px;
+        }
+        button {
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        #recommendations {
+            margin: 20px;
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+            border-radius: 8px;
+            width: 70%;
+            max-width: 600px;
+            overflow-x: auto;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Movie Recommender</h1>
+    <form id="recommendationForm">
+        <label for="movieTitle">Enter Movie Title:</label>
+        <input type="text" id="movieTitle" name="movieTitle" required>
+        <button type="button" onclick="getRecommendations()">Get Recommendations</button>
+    </form>
+    <div id="recommendations"></div>
+    <script>
+        function getRecommendations() {
+            const title = document.getElementById('movieTitle').value;
+            fetch(`/recommendations?title=${encodeURIComponent(title)}`)
+                .then(response => response.json())
+                .then(data => displayRecommendations(data));
+        }
+        function displayRecommendations(recommendations) {
+            const recommendationsDiv = document.getElementById('recommendations');
+            recommendationsDiv.innerHTML = '';
+            recommendations.forEach(movie => {
+                const movieDiv = document.createElement('div');
+                movieDiv.innerHTML = `<p>${movie.title} (${movie.release_date}) - ${movie.vote_average}</p>`;
+                recommendationsDiv.appendChild(movieDiv);
+            });
+        }
+    </script>
+</body>
+</html>
